@@ -20,7 +20,7 @@ class MoviesController < ApplicationController
       @sort = session[:sort]
     end
     
-    if params[:commit] == 'Refresh'
+    
       if params[:ratings]
         @ratings_filter = params[:ratings].keys
       else
@@ -36,7 +36,6 @@ class MoviesController < ApplicationController
           @ratings_filter = @all_ratings
         end
       end
-    end
     
     if @sort!=session[:sort]
       session[:sort] = @sort
@@ -44,9 +43,7 @@ class MoviesController < ApplicationController
     if @ratings_filter!=session[:ratings]
       session[:ratings] = @ratings_filter
     end
-    
-    @movies = @movies.sorting(@sort)
-    @movies = @movies.rating(@ratings_filter)
+    @movies = Movie.order(@sort).where('rating in (?)', @ratings_filter)
   end
 
   def new
